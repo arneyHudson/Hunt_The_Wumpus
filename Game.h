@@ -5,4 +5,17 @@
 #ifndef HUNT_THE_WUMPUS_GAME_H
 #define HUNT_THE_WUMPUS_GAME_H
 
+class Game {
+public:
+    void play();
+
+private:
+    bool gameOver = false;
+
+    static void displayCurrentState();
+    void getUserAction();
+    void handleUserAction(char action);
+    void updateGameState();
+};
+
 #endif //HUNT_THE_WUMPUS_GAME_H
