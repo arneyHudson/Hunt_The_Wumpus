@@ -3,9 +3,11 @@
 //
 
 #include "ArcadeMap.h"
+#include "MapCell.h"
 
 #include <iostream>
 #include <string>
+#include <cstdlib>
 
 using namespace std;
 

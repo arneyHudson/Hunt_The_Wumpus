@@ -16,6 +16,8 @@ private:
     void getUserAction();
     void handleUserAction(char action);
     void updateGameState();
+
+    static void help() ;
 };
 
 #endif //HUNT_THE_WUMPUS_GAME_H
