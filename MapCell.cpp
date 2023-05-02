@@ -4,7 +4,8 @@
 
 #include "MapCell.h"
 
-MapCell::MapCell(int x, int y, char type) : xLocation(x), yLocation(y), token(type), hasPlayer(false) {
+MapCell::MapCell(int x, int y, char type) : xLocation(x), yLocation(y), token(type),
+hasPlayer(false), hasFreddy(false), hasBonnie(false), type(type) {
 }
 
 /**
@@ -15,12 +16,16 @@ bool MapCell::hasCollapsingRoom() {
     return token == '#';
 }
 
+bool MapCell::hasAnimatronic() {
+    return hasFreddy || hasBonnie || token == 'F' || token == 'B';
+}
+
 /**
  * If the character is a T, there is a pit
  * @return if there is a thief
  */
 bool MapCell::hasTrippingRoom() {
-    return token == 'T';
+    return token == ',';
 }
 
 /**
@@ -46,12 +51,16 @@ bool MapCell::occupied() {
 }
 
 /**
- * Prints the char unless the location is where the robot is (prints an 'R' in that case)
+ * Prints the char unless the location is where the robot is (prints an 'P' in that case)
  * @return
  */
 char MapCell::display() {
     if (hasPlayer) {
         return 'P';
+    } else if(hasFreddy) {
+        return 'F';
+    } else if(hasBonnie) {
+        return 'B';
     } else {
         return token;
     }
@@ -72,5 +81,5 @@ void MapCell::vacate() {
 }
 
 bool MapCell::hasMagnets() {
-    return token == 'M';
+    return token == '*';
 }

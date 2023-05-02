@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "ArcadeMap.h"
 #include "MapCell.h"
+#include "Game.h"
 
 
 using namespace std;
@@ -80,36 +81,29 @@ bool Player::move(char direction) {
     }
     // Check if there is a tripping room at the new location
     if(currentCell->hasTrippingRoom()) {
+        cout << "The player fell over some debris in the current room they were exploring." << endl;
         if(batteries >= 1) {
             batteries--;
-            cout << "The player fell over some debris in the room they tried exploring. They unfortunately lost a "
-                    "battery during their stumble. The Player now has " << batteries << " batteries.";
-        } else {
-            cout << "The player fell over some debris in the current room they were exploring." << endl;
+            cout << "They unfortunately lost a battery during their stumble. "
+                    "The Player now has " << batteries << " batteries." << endl;
+        }
+        if(magnets >= 1) {
+            magnets--;
+            cout << "Man you're clumsy. Say goodbye to a magnet "
+                    "The Player now has " << magnets << " magnets." << endl;
         }
     }
     if (currentCell->hasCollapsingRoom()) {
         isAlive = false;
-        cout << "The ceiling collapsed in on the player..." << endl;
+        cout << "The ceiling collapsed in on the player...\nR.I.P." << endl;
+    }
+    if(currentCell->hasAnimatronic()) {
+        isAlive = false;
+        cout << "You got a bit too close to one of the robots...\nR.I.P." << endl;
     }
 
     // The move is valid if it reaches here
     return true;
-}
-
-int Player::getBatteries() const {
-    return batteries;
-}
-
-int Player::getMagnets() const {
-    return magnets;
-}
-
-void Player::setBattery(int battery) {
-    this->batteries = battery;
-}
-void Player::setMagnet(int magnet) {
-    this->magnets = magnet;
 }
 
 void Player::displayInventory() const {
@@ -118,6 +112,43 @@ void Player::displayInventory() const {
 
 bool Player::getIsAlive() {
     return isAlive;
+}
+
+bool Player::nearAnimatronic(ArcadeMap* map) {
+    int x = xLocation;
+    int y = yLocation;
+
+    // Check neighboring cells for robots
+    if (map->getCell(x - 1, y) && map->getCell(x - 1, y)->hasAnimatronic()) {
+        return true;  // Robot is in the cell above the player
+    }
+    if (map->getCell(x + 1, y) && map->getCell(x + 1, y)->hasAnimatronic()) {
+        return true;  // Robot is in the cell below the player
+    }
+    if (map->getCell(x, y - 1) && map->getCell(x, y - 1)->hasAnimatronic()) {
+        return true;  // Robot is in the cell to the left of the player
+    }
+    if (map->getCell(x, y + 1) && map->getCell(x, y + 1)->hasAnimatronic()) {
+        return true;  // Robot is in the cell to the right of the player
+    }
+
+    return false; // No robots nearby
+}
+
+int Player::minusBattery() {
+    if(batteries >= 1) {
+        return batteries--;
+    } else {
+        return batteries;
+    }
+}
+
+int Player::minusMagnet() {
+    if(magnets >= 1) {
+        return magnets--;
+    } else {
+        return magnets;
+    }
 }
 
 

@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "ArcadeMap.h"
 #include "Animatronics.h"
+#include "MapCell.h"
 #include <iostream>
 #include <random>
 #include <algorithm>
@@ -17,16 +18,17 @@ void Game::play() {
     while (!gameOver) {
         displayCurrentState();
         getUserAction();
-        //player->displayStatus();
         if(!player->getIsAlive()) {
             gameOver = true;
+        } else {
+            player->displayInventory();
         }
     }
 }
 
 void Game::displayCurrentState() {
     // Display current state of the game
-    cout << "\nAction: (N)orth, (S)outh, (E)ast, (W)est, shine (F)lashlight, use (M)agnet, Check (I)nventory "
+    cout << "\nAction: (N)orth, (S)outh, (E)ast, (W)est, shine (F)lashlight, use (M)agnet, (C)heck status "
             "(D)ebug/Look at Map, (H)elp, (B)ackground, (Q)uit: ";
 }
 
@@ -64,23 +66,30 @@ void Game::handleUserAction(char action) {
             cout << "\nYou move to the west." << endl;
             player->move('w');
             break;
-        case 'I':
-        case 'i':
+        case 'C':
+        case 'c':
             player->displayStatus();
             break;
         case 'F':
         case 'f':
             // Shine flashlight
+            player->minusBattery();
             cout << "\nYou shine your flashlight out into the distance." << endl;
-            player->move('f');
-            //if(player->nearAnimatronic())
+            if(player->nearAnimatronic(map)) {
+                cout << "\nYou are near an animatronic, stay wary and try and use a magnet!" << endl;
+            } else {
+                cout << "\nThere are no animatronics nearby, stay safe" << endl;
+            }
             break;
         case 'M':
         case 'm':
-            // Shine flashlight
+            player->minusMagnet();
             cout << "\nYou attempt to disable a robot with your magnet." << endl;
-            player->move('m');
-            //if(player->nearAnimatronic())
+            if(player->nearAnimatronic(map)) {
+                cout << "\nYou disabled one of the robots. Great work!" << endl;
+            } else {
+                cout << "\nYou missed your shot..." << endl;
+            }
             break;
         case 'H':
         case 'h':
@@ -125,21 +134,36 @@ void Game::help() {
 
 Game::Game() {
     map = new ArcadeMap();
-    int xCoords[5] = {0, 1, 2, 3, 4};
-    int yCoords[5] = {0, 1, 2, 3, 4};
 
-    // Create a random number generator
+    // Create an array of all possible coordinates on the map
+    vector<pair<int, int>> coordinates;
+    for (int x = 0; x < ArcadeMap::HEIGHT; ++x) {
+        for (int y = 0; y < ArcadeMap::WIDTH; ++y) {
+            coordinates.emplace_back(x, y);
+        }
+    }
+
+    // Shuffle the coordinates randomly
     random_device rd;
     mt19937 gen(rd());
+    shuffle(coordinates.begin(), coordinates.end(), gen);
 
-    // Generate random x and y coordinates
-    shuffle(begin(xCoords), end(xCoords), gen);
-    shuffle(begin(yCoords), end(yCoords), gen);
+    // Extract the first three coordinates for player, freddy, and bonnie objects
+    pair<int, int> playerCoords = coordinates[0];
+    pair<int, int> freddyCoords = coordinates[1];
+    pair<int, int> bonnieCoords = coordinates[2];
 
     map->load();
-    player = new Player(map, xCoords[0], yCoords[0]);
-    freddy = new Animatronics(map, xCoords[1], yCoords[1]);
-    bonnie = new Animatronics(map, xCoords[2], yCoords[2]);
+
+    // Set the hasFreddy flag for Freddy's initial location
+    map->getCell(freddyCoords.first, freddyCoords.second)->setFreddy(true);
+
+    // Set the hasBonnie flag for Bonnie's initial location
+    map->getCell(bonnieCoords.first, bonnieCoords.second)->setBonnie(true);
+
+    player = new Player(map, playerCoords.first, playerCoords.second);
+    freddy = new Animatronics(map, freddyCoords.first, freddyCoords.second);
+    bonnie = new Animatronics(map, bonnieCoords.first, bonnieCoords.second);
 }
 
 
@@ -154,6 +178,10 @@ void Game::gameBackground() {
     cout << "   use and you'll constantly be needing to find more batteries" << endl;
     cout << "   Finally, there may happen to be some old magnets lying around, " << endl;
     cout << "   Could these be used to disable the robots? Only one way to find out!" << endl;
+}
+
+ArcadeMap* Game::getMap() {
+    return map;
 }
 
 int main() {

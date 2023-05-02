@@ -13,6 +13,7 @@ class Game {
 public:
     Game();
     void play();
+    ArcadeMap* getMap();
 
 private:
     bool gameOver = false;

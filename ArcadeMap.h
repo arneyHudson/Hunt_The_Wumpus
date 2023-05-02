@@ -8,6 +8,8 @@ class MapCell;
 
 class ArcadeMap {
 public:
+    static const int WIDTH = 5;
+    static const int HEIGHT = 5;
     // initialize empty arcadeMap
     ArcadeMap();
     MapCell* getCell(int x, int y);
@@ -15,9 +17,8 @@ public:
     void write();
     static void writeBorders();
 
+
 private:
-    static const int WIDTH = 5;
-    static const int HEIGHT = 5;
     MapCell* cells[WIDTH][HEIGHT]{};
 
     static char getRandomToken();

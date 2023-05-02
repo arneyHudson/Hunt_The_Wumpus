@@ -10,6 +10,8 @@ class MapCell {
     int xLocation, yLocation;
     char token;
     bool hasPlayer;
+    bool hasFreddy;
+    bool hasBonnie;
     char type;
 
 public:
@@ -31,6 +33,16 @@ public:
     void enter();
     // robot leaves location
     void vacate();
+
+    bool hasAnimatronic();
+
+    void setFreddy(bool value) {
+        this->hasFreddy = value;
+    }
+
+    void setBonnie(bool value) {
+        this->hasBonnie = value;
+    }
 };
 
 

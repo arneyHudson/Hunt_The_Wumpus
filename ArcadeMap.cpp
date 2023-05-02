@@ -31,8 +31,12 @@ void ArcadeMap::load() {
     }
 }
 
+// + symbol = Battery
+// * symbol = Magnet
+// # symbol = Collapsing room
+// , symbol = Tripping room
 char ArcadeMap::getRandomToken() {
-    const char tokens[] = {'+', 'M', '#', 'T'};
+    const char tokens[] = {'+', '*', '#', ','};
     const int numTokens = sizeof(tokens) / sizeof(tokens[0]);
 
     // Seed the random number generator with the current time
@@ -43,8 +47,8 @@ char ArcadeMap::getRandomToken() {
     uniform_real_distribution<double> dis(0.0, 1.0);
     double randNum = dis(gen);
 
-    // Return an empty space token if the random number is less than 0.5
-    if (randNum < 0.75) {
+    // Return an empty space token if the random number is less than 0.7 (70% chance of a space being empty)
+    if (randNum < 0.7) {
         return ' ';
     }
     else {

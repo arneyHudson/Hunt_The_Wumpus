@@ -6,6 +6,7 @@
 #define HUNT_THE_WUMPUS_PLAYER_H
 class MapCell;
 class ArcadeMap;
+class Game;
 
 // A robot which lives on a arcadeMap at a particular x and y coordinate.
 class Player {
@@ -19,18 +20,17 @@ public:
     //   to break it up
     bool move(char direction);
     bool getIsAlive();
-
-    int getBatteries() const;               // method to get number of batteries
-    int getMagnets() const;                  // method to get number of magnets
-    void setBattery(int battery);   // method to set number of batteries
-    void setMagnet(int magnet);         // method to set number of magnets
     void displayInventory() const;        // method to display player's inventory
+    bool nearAnimatronic(ArcadeMap* map);
+    int minusBattery();
+    int minusMagnet();
+
 private:
     ArcadeMap *arcadeMap;
     MapCell *currentCell;
     int xLocation, yLocation;
-    int batteries;    // number of batteries for flashlight
-    int magnets;       // number of masks for hiding from monsters
+    int batteries = 2;    // number of batteries for flashlight
+    int magnets = 2;       // number of masks for hiding from monsters
     bool isAlive = true;
 
 };
