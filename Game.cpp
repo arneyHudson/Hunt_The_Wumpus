@@ -5,10 +5,10 @@
 #include "Game.h"
 #include "Player.h"
 #include "ArcadeMap.h"
-
-#include <iostream>
-#include "cstdlib"
 #include "Animatronics.h"
+#include <iostream>
+#include <random>
+#include <algorithm>
 
 using namespace std;
 
@@ -43,25 +43,25 @@ void Game::handleUserAction(char action) {
         case 'N':
         case 'n':
             // Move north
-            cout << "You move to the north." << endl;
+            cout << "\nYou move to the north." << endl;
             player->move('n');
             break;
         case 'S':
         case 's':
             // Move south
-            cout << "You move to the south." << endl;
+            cout << "\nYou move to the south." << endl;
             player->move('s');
             break;
         case 'E':
         case 'e':
             // Move east
-            cout << "You move to the east." << endl;
+            cout << "\nYou move to the east." << endl;
             player->move('e');
             break;
         case 'W':
         case 'w':
             // Move west
-            cout << "You move to the west." << endl;
+            cout << "\nYou move to the west." << endl;
             player->move('w');
             break;
         case 'I':
@@ -71,14 +71,14 @@ void Game::handleUserAction(char action) {
         case 'F':
         case 'f':
             // Shine flashlight
-            cout << "You shine your flashlight out into the distance." << endl;
+            cout << "\nYou shine your flashlight out into the distance." << endl;
             player->move('f');
             //if(player->nearAnimatronic())
             break;
         case 'M':
         case 'm':
             // Shine flashlight
-            cout << "You attempt to disable a robot with your magnet." << endl;
+            cout << "\nYou attempt to disable a robot with your magnet." << endl;
             player->move('m');
             //if(player->nearAnimatronic())
             break;
@@ -101,7 +101,7 @@ void Game::handleUserAction(char action) {
         case 'D':
         case 'd':
             // Look at map
-            cout << "\nThis is sort of cheating but I guess..." << endl;
+            cout << "\nThis is sort of cheating but here you go I guess..." << endl;
             map->write();
             break;
         default:
@@ -125,23 +125,17 @@ void Game::help() {
 
 Game::Game() {
     map = new ArcadeMap();
-    int xCoords[5] = {0,1,2,3,4};
-    int yCoords[5] = {0,1,2,3, 4};
+    int xCoords[5] = {0, 1, 2, 3, 4};
+    int yCoords[5] = {0, 1, 2, 3, 4};
+
+    // Create a random number generator
+    random_device rd;
+    mt19937 gen(rd());
 
     // Generate random x and y coordinates
-    for (int i = 0; i < 5; ++i) {
-        xCoords[i] = rand() % 5;
-        yCoords[i] = rand() % 5;
+    shuffle(begin(xCoords), end(xCoords), gen);
+    shuffle(begin(yCoords), end(yCoords), gen);
 
-        // Check for duplicate coordinates
-        for (int j = 0; j < i; ++j) {
-            if (xCoords[i] == xCoords[j] && yCoords[i] == yCoords[j]) {
-                // Duplicate coordinates found, regenerate
-                --i;
-                break;
-            }
-        }
-    }
     map->load();
     player = new Player(map, xCoords[0], yCoords[0]);
     freddy = new Animatronics(map, xCoords[1], yCoords[1]);

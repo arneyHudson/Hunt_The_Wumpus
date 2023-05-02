@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <string>
-#include <cstdlib>
+#include <random>
 
 using namespace std;
 
@@ -35,16 +35,22 @@ char ArcadeMap::getRandomToken() {
     const char tokens[] = {'+', 'M', '#', 'T'};
     const int numTokens = sizeof(tokens) / sizeof(tokens[0]);
 
+    // Seed the random number generator with the current time
+    random_device rd;
+    mt19937 gen(rd());
+
     // Generate a random number between 0 and 1
-    double randNum = static_cast<double>(rand()) / RAND_MAX;
+    uniform_real_distribution<double> dis(0.0, 1.0);
+    double randNum = dis(gen);
 
     // Return an empty space token if the random number is less than 0.5
     if (randNum < 0.5) {
-        return '.';
+        return ' ';
     }
     else {
         // Get a random index within the range of the tokens array
-        int randomIndex = rand() % numTokens;
+        uniform_int_distribution<int> indexDis(0, numTokens - 1);
+        int randomIndex = indexDis(gen);
         return tokens[randomIndex];
     }
 }
