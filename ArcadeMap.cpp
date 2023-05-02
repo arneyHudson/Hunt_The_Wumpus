@@ -44,7 +44,7 @@ char ArcadeMap::getRandomToken() {
     double randNum = dis(gen);
 
     // Return an empty space token if the random number is less than 0.5
-    if (randNum < 0.5) {
+    if (randNum < 0.75) {
         return ' ';
     }
     else {
