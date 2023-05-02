@@ -4,8 +4,11 @@
 
 #include "Game.h"
 #include "Player.h"
+#include "ArcadeMap.h"
 
 #include <iostream>
+#include "cstdlib"
+#include "Animatronics.h"
 
 using namespace std;
 
@@ -14,13 +17,17 @@ void Game::play() {
     while (!gameOver) {
         displayCurrentState();
         getUserAction();
-        updateGameState();
+        //player->displayStatus();
+        if(!player->getIsAlive()) {
+            gameOver = true;
+        }
     }
 }
 
 void Game::displayCurrentState() {
     // Display current state of the game
-    cout << "\nAction: (N)orth, (S)outh, (E)ast, (W)est, shine (F)lashlight, (D)ebug/Look at Map, (H)elp, (Q)uit: ";
+    cout << "\nAction: (N)orth, (S)outh, (E)ast, (W)est, shine (F)lashlight, use (M)agnet, Check (I)nventory "
+            "(D)ebug/Look at Map, (H)elp, (B)ackground, (Q)uit: ";
 }
 
 void Game::getUserAction() {
@@ -37,31 +44,53 @@ void Game::handleUserAction(char action) {
         case 'n':
             // Move north
             cout << "You move to the north." << endl;
+            player->move('n');
             break;
         case 'S':
         case 's':
             // Move south
             cout << "You move to the south." << endl;
+            player->move('s');
             break;
         case 'E':
         case 'e':
             // Move east
             cout << "You move to the east." << endl;
+            player->move('e');
             break;
         case 'W':
         case 'w':
             // Move west
             cout << "You move to the west." << endl;
+            player->move('w');
+            break;
+        case 'I':
+        case 'i':
+            player->displayStatus();
             break;
         case 'F':
         case 'f':
             // Shine flashlight
             cout << "You shine your flashlight out into the distance." << endl;
+            player->move('f');
+            //if(player->nearAnimatronic())
+            break;
+        case 'M':
+        case 'm':
+            // Shine flashlight
+            cout << "You attempt to disable a robot with your magnet." << endl;
+            player->move('m');
+            //if(player->nearAnimatronic())
             break;
         case 'H':
         case 'h':
             // Display help
             help();
+            break;
+        case 'B':
+        case 'b':
+            // Display background info about game
+            gameBackground();
             break;
         case 'Q':
         case 'q':
@@ -72,7 +101,8 @@ void Game::handleUserAction(char action) {
         case 'D':
         case 'd':
             // Look at map
-
+            cout << "\nThis is sort of cheating but I guess..." << endl;
+            map->write();
             break;
         default:
             cout << "\nInvalid action. Please try again." << endl;
@@ -93,14 +123,33 @@ void Game::help() {
     cout << "Good luck out there, it shouldn't be to difficult to SURVIVE!" << endl;
 }
 
-void Game::updateGameState() {
+Game::Game() {
+    map = new ArcadeMap();
+    int xCoords[5] = {0,1,2,3,4};
+    int yCoords[5] = {0,1,2,3, 4};
+
+    // Generate random x and y coordinates
+    for (int i = 0; i < 5; ++i) {
+        xCoords[i] = rand() % 5;
+        yCoords[i] = rand() % 5;
+
+        // Check for duplicate coordinates
+        for (int j = 0; j < i; ++j) {
+            if (xCoords[i] == xCoords[j] && yCoords[i] == yCoords[j]) {
+                // Duplicate coordinates found, regenerate
+                --i;
+                break;
+            }
+        }
+    }
+    map->load();
+    player = new Player(map, xCoords[0], yCoords[0]);
+    freddy = new Animatronics(map, xCoords[1], yCoords[1]);
+    bonnie = new Animatronics(map, xCoords[2], yCoords[2]);
 }
 
-void printMap() {
 
-}
-
-void gameBackground() {
+void Game::gameBackground() {
     cout << "Basic Game Background: " << endl;
     cout << "   You are a security guard working the night shift at a local arcade" << endl;
     cout << "   This arcade isn't in the best of shape so watch out for rooms with collapsing ceilings" << endl;
@@ -114,8 +163,8 @@ void gameBackground() {
 }
 
 int main() {
-    gameBackground();
     Game game;  // Create an instance of the Game class
     game.play();  // Call the play method on the instance
+    cout << "GAME OVER!!!" << endl;
     return 0;
 }

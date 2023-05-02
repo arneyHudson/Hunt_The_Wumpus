@@ -10,7 +10,7 @@ class ArcadeMap;
 
 // A robot which lives on a arcadeMap at a particular x and y coordinate.
 class Animatronics {
-
+public:
     Animatronics(ArcadeMap *arcadeMap, int initialX, int initialY);
 
 private:

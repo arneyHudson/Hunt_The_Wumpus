@@ -9,7 +9,7 @@ class ArcadeMap;
 
 // A robot which lives on a arcadeMap at a particular x and y coordinate.
 class Player {
-
+public:
     Player(ArcadeMap *arcadeMap, int initialX, int initialY);
     // display robot status in the form of "Player at (6, 7) with 3 batteries and 1 magnet" to cout
     void displayStatus() const;
@@ -18,6 +18,7 @@ class Player {
     // Warning: this method can get long - be sure to write private messages
     //   to break it up
     bool move(char direction);
+    bool getIsAlive();
 
     int getBatteries() const;               // method to get number of batteries
     int getMagnets() const;                  // method to get number of magnets
@@ -30,6 +31,8 @@ private:
     int xLocation, yLocation;
     int batteries;    // number of batteries for flashlight
     int magnets;       // number of masks for hiding from monsters
+    bool isAlive = true;
+
 };
 
 #endif //HUNT_THE_WUMPUS_PLAYER_H

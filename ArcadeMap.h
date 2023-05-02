@@ -17,7 +17,7 @@ public:
 
 private:
     static const int WIDTH = 5;
-    static const int HEIGHT = 4;
+    static const int HEIGHT = 5;
     MapCell* cells[WIDTH][HEIGHT]{};
 
     static char getRandomToken();

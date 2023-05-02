@@ -23,6 +23,9 @@ Player::Player(ArcadeMap *arcadeMap, int initialX, int initialY) : arcadeMap(arc
         magnets++;
         currentCell->removeItem();
     }
+    if (currentCell->hasCollapsingRoom()) {
+        isAlive = false;
+    }
     xLocation = initialX;
     yLocation = initialY;
     currentCell->enter();
@@ -85,6 +88,10 @@ bool Player::move(char direction) {
             cout << "The player fell over some debris in the current room they were exploring." << endl;
         }
     }
+    if (currentCell->hasCollapsingRoom()) {
+        isAlive = false;
+        cout << "The ceiling collapsed in on the player..." << endl;
+    }
 
     // The move is valid if it reaches here
     return true;
@@ -107,6 +114,10 @@ void Player::setMagnet(int magnet) {
 
 void Player::displayInventory() const {
     cout << "The Player currently has: " << batteries << " batteries, and " << magnets << " magnets." << endl;
+}
+
+bool Player::getIsAlive() {
+    return isAlive;
 }
 
 
