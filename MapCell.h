@@ -5,6 +5,7 @@
 #ifndef HUNT_THE_WUMPUS_MAPCELL_H
 #define HUNT_THE_WUMPUS_MAPCELL_H
 
+#include "Tunnel.h"
 
 class MapCell {
     int xLocation, yLocation;
@@ -15,6 +16,7 @@ class MapCell {
     char type;
 
 public:
+    Tunnel* tunnel = nullptr;
     MapCell(int x, int y, char type);
     // true if pit at this location
     bool hasTrippingRoom();
@@ -43,6 +45,17 @@ public:
     void setBonnie(bool value) {
         this->hasBonnie = value;
     }
+
+    void setTunnel(bool value) {
+        this->hasTunnel = value;
+    }
+
+    void setTunnel(Tunnel* tun){
+        this->tunnel = tun;
+    }
+
+
+    bool hasTunnel;
 };
 
 

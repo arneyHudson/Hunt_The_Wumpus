@@ -74,14 +74,31 @@ bool Player::move(char direction) {
     currentCell->enter();
     xLocation = newX;
     yLocation = newY;
+    nearAnimatronic(arcadeMap);
+    nearHazard(arcadeMap);
+    nearTunnel(arcadeMap);
     // Check if there is any batteries at the new location
     if (currentCell->hasBatteries()) {
         batteries++;
+        cout << "Congrats! You found a battery!" << endl;
         currentCell->removeItem();
     }
+
+    if (currentCell->hasTunnel){
+        MapCell *transportCell = arcadeMap->getCell(currentCell->tunnel->getExit()->getX(),
+                                                    currentCell->tunnel->getExit()->getY());
+        currentCell->vacate();
+        currentCell = transportCell;
+        currentCell->enter();
+        xLocation = currentCell->tunnel->getExit()->getX();
+        yLocation = currentCell->tunnel->getExit()->getY();
+        cout << "Looks like the Player found a tunnel, he follows it to the exit and finds"
+                " himself in a different room in the arcade" << endl;
+    }
+
     // Check if there is a tripping room at the new location
     if(currentCell->hasTrippingRoom()) {
-        cout << "The player fell over some debris in the current room they were exploring." << endl;
+        cout << "The player tripped over a loose board in the current room they were exploring." << endl;
         if(batteries >= 1) {
             batteries--;
             cout << "They unfortunately lost a battery during their stumble. "
@@ -114,25 +131,77 @@ bool Player::getIsAlive() {
     return isAlive;
 }
 
-bool Player::nearAnimatronic(ArcadeMap* map) {
+bool Player::nearAnimatronic(ArcadeMap* map) const {
     int x = xLocation;
     int y = yLocation;
-
     // Check neighboring cells for robots
     if (map->getCell(x - 1, y) && map->getCell(x - 1, y)->hasAnimatronic()) {
-        return true;  // Robot is in the cell above the player
+//        cout << "You hear the clanking parts of a robot nearby..." << endl;
+        return true;
     }
     if (map->getCell(x + 1, y) && map->getCell(x + 1, y)->hasAnimatronic()) {
+//        cout << "You hear the clanking parts of a robot nearby..." << endl;
         return true;  // Robot is in the cell below the player
     }
     if (map->getCell(x, y - 1) && map->getCell(x, y - 1)->hasAnimatronic()) {
+//        cout << "You hear the clanking parts of a robot nearby..." << endl;
         return true;  // Robot is in the cell to the left of the player
     }
     if (map->getCell(x, y + 1) && map->getCell(x, y + 1)->hasAnimatronic()) {
+//        cout << "You hear the clanking parts of a robot nearby..." << endl;
         return true;  // Robot is in the cell to the right of the player
     }
 
     return false; // No robots nearby
+}
+
+void Player::nearHazard(ArcadeMap *map) const {
+    int x = xLocation;
+    int y = yLocation;
+    // Check neighboring cells for robots
+    if (map->getCell(x - 1, y) && map->getCell(x - 1, y)->hasCollapsingRoom()) {
+        cout << "You hear pieces of ceiling falling nearby..." << endl;
+    }
+    if (map->getCell(x + 1, y) && map->getCell(x + 1, y)->hasCollapsingRoom()) {
+        cout << "You hear pieces of ceiling falling nearby..." << endl;
+    }
+    if (map->getCell(x, y - 1) && map->getCell(x, y - 1)->hasCollapsingRoom()) {
+        cout << "You hear pieces of ceiling falling nearby..." << endl;
+    }
+    if (map->getCell(x, y + 1) && map->getCell(x, y + 1)->hasCollapsingRoom()) {
+        cout << "You hear pieces of ceiling falling nearby..." << endl;
+    }
+
+    if (map->getCell(x - 1, y) && map->getCell(x - 1, y)->hasTrippingRoom()) {
+        cout << "The boards are creaky here... be careful where you step" << endl;
+    }
+    if (map->getCell(x + 1, y) && map->getCell(x + 1, y)->hasTrippingRoom()) {
+        cout << "The boards are creaky here... be careful where you step" << endl;
+    }
+    if (map->getCell(x, y - 1) && map->getCell(x, y - 1)->hasTrippingRoom()) {
+        cout << "The boards are creaky here... be careful where you step" << endl;
+    }
+    if (map->getCell(x, y + 1) && map->getCell(x, y + 1)->hasTrippingRoom()) {
+        cout << "The boards are creaky here... be careful where you step" << endl;
+    }
+
+}
+
+void Player::nearTunnel(ArcadeMap *map) const {
+    int x = xLocation;
+    int y = yLocation;
+    if (map->getCell(x - 1, y) && map->getCell(x - 1, y)->hasTunnel) {
+        cout << "You feel a gust of wind in one of the nearby rooms... could be a tunnel" << endl;
+    }
+    if (map->getCell(x + 1, y) && map->getCell(x + 1, y)->hasTunnel) {
+        cout << "You feel a gust of wind in one of the nearby rooms... could be a tunnel" << endl;
+    }
+    if (map->getCell(x, y - 1) && map->getCell(x, y - 1)->hasTunnel) {
+        cout << "You feel a gust of wind in one of the nearby rooms... could be a tunnel" << endl;
+    }
+    if (map->getCell(x, y + 1) && map->getCell(x, y + 1)->hasTunnel) {
+        cout << "You feel a gust of wind in one of the nearby rooms... could be a tunnel" << endl;
+    }
 }
 
 int Player::minusBattery() {

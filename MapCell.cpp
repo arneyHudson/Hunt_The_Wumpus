@@ -5,7 +5,7 @@
 #include "MapCell.h"
 
 MapCell::MapCell(int x, int y, char type) : xLocation(x), yLocation(y), token(type),
-hasPlayer(false), hasFreddy(false), hasBonnie(false), type(type) {
+hasPlayer(false), hasFreddy(false), hasBonnie(false), hasTunnel(false), type(type) {
 }
 
 /**
@@ -36,6 +36,8 @@ bool MapCell::hasBatteries() {
     return token == '+';
 }
 
+
+
 /**
  * If gold has already been collected by the robot remove it by making it an empty space.
  */
@@ -61,6 +63,8 @@ char MapCell::display() {
         return 'F';
     } else if(hasBonnie) {
         return 'B';
+    } else if (hasTunnel){
+        return 'T';
     } else {
         return token;
     }

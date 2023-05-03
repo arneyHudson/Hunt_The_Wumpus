@@ -15,4 +15,4 @@ add_executable(hunt_the_wumpus
         Room.cpp
         Room.h
         Animatronics.cpp
-        Animatronics.h MapCell.cpp MapCell.h)
+        Animatronics.h MapCell.cpp MapCell.h Tunnel.h Tunnel.cpp)

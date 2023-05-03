@@ -7,6 +7,7 @@
 #include "ArcadeMap.h"
 #include "Animatronics.h"
 #include "MapCell.h"
+#include "Tunnel.h"
 #include <iostream>
 #include <random>
 #include <algorithm>
@@ -152,6 +153,8 @@ Game::Game() {
     pair<int, int> playerCoords = coordinates[0];
     pair<int, int> freddyCoords = coordinates[1];
     pair<int, int> bonnieCoords = coordinates[2];
+    pair<int, int> tunnel1coords = coordinates[3];
+    pair<int, int> tunnel2coords = coordinates[4];
 
     map->load();
 
@@ -160,6 +163,16 @@ Game::Game() {
 
     // Set the hasBonnie flag for Bonnie's initial location
     map->getCell(bonnieCoords.first, bonnieCoords.second)->setBonnie(true);
+
+    map->getCell(tunnel1coords.first, tunnel1coords.second)->setTunnel(true);
+    map->getCell(tunnel2coords.first, tunnel2coords.second)->setTunnel(true);
+
+
+    tunnel1 = new Tunnel(map, tunnel1coords.first, tunnel1coords.second);
+    tunnel2 = new Tunnel(map, tunnel1coords.first, tunnel1coords.second, tunnel1);
+    tunnel1->setExit(tunnel2);
+    map->getCell(tunnel1coords.first, tunnel1coords.second)->setTunnel(tunnel1);
+    map->getCell(tunnel2coords.first, tunnel2coords.second)->setTunnel(tunnel2);
 
     player = new Player(map, playerCoords.first, playerCoords.second);
     freddy = new Animatronics(map, freddyCoords.first, freddyCoords.second);

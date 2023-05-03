@@ -8,6 +8,7 @@
 class Player;
 class Animatronics;
 class ArcadeMap;
+class Tunnel;
 
 class Game {
 public:
@@ -21,6 +22,9 @@ private:
     Player *player;
     Animatronics *freddy;
     Animatronics *bonnie;
+    Tunnel *tunnel1;
+    Tunnel *tunnel2;
+
 
     static void displayCurrentState();
     void getUserAction();
