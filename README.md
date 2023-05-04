@@ -1,5 +1,7 @@
 # Hunt The Wumpus
 
+Names: Hudson Arney, Ryan Kruk, and Aydin Ruppe
+Used CLion
 
 
 ## Getting started
