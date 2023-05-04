@@ -36,7 +36,7 @@ public:
     // robot leaves location
     void vacate();
 
-    bool hasAnimatronic();
+    int hasAnimatronic();
 
     void setFreddy(bool value) {
         this->hasFreddy = value;

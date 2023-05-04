@@ -84,6 +84,12 @@ bool Player::move(char direction) {
         currentCell->removeItem();
     }
 
+    if (currentCell->hasMagnets()) {
+        magnets++;
+        cout << "Congrats! You found a magnet!" << endl;
+        currentCell->removeItem();
+    }
+
     if (currentCell->hasTunnel){
         MapCell *transportCell = arcadeMap->getCell(currentCell->tunnel->getExit()->getX(),
                                                     currentCell->tunnel->getExit()->getY());
@@ -115,6 +121,7 @@ bool Player::move(char direction) {
         cout << "The ceiling collapsed in on the player...\nR.I.P." << endl;
     }
     if(currentCell->hasAnimatronic()) {
+
         isAlive = false;
         cout << "You got a bit too close to one of the robots...\nR.I.P." << endl;
     }
@@ -131,28 +138,37 @@ bool Player::getIsAlive() {
     return isAlive;
 }
 
-bool Player::nearAnimatronic(ArcadeMap* map) const {
+int Player::nearAnimatronic(ArcadeMap* map) const {
     int x = xLocation;
     int y = yLocation;
     // Check neighboring cells for robots
-    if (map->getCell(x - 1, y) && map->getCell(x - 1, y)->hasAnimatronic()) {
-//        cout << "You hear the clanking parts of a robot nearby..." << endl;
-        return true;
+    if (map->getCell(x - 1, y) && map->getCell(x - 1, y)->hasAnimatronic() == 1) {
+        return 1;  // Freddie is in the cell left the player
     }
-    if (map->getCell(x + 1, y) && map->getCell(x + 1, y)->hasAnimatronic()) {
-//        cout << "You hear the clanking parts of a robot nearby..." << endl;
-        return true;  // Robot is in the cell below the player
+    if (map->getCell(x + 1, y) && map->getCell(x + 1, y)->hasAnimatronic() == 1) {
+        return 2;  // Freddie is in the cell right the player
     }
-    if (map->getCell(x, y - 1) && map->getCell(x, y - 1)->hasAnimatronic()) {
-//        cout << "You hear the clanking parts of a robot nearby..." << endl;
-        return true;  // Robot is in the cell to the left of the player
+    if (map->getCell(x, y - 1) && map->getCell(x, y - 1)->hasAnimatronic() == 1) {
+        return 3;  // Freddie is in the cell to the below of the player
     }
-    if (map->getCell(x, y + 1) && map->getCell(x, y + 1)->hasAnimatronic()) {
-//        cout << "You hear the clanking parts of a robot nearby..." << endl;
-        return true;  // Robot is in the cell to the right of the player
+    if (map->getCell(x, y + 1) && map->getCell(x, y + 1)->hasAnimatronic() == 1) {
+        return 4;  // Freddie is in the cell to the top of the player
     }
 
-    return false; // No robots nearby
+    if (map->getCell(x - 1, y) && map->getCell(x - 1, y)->hasAnimatronic() == 2) {
+        return 5;  // Bonnie is in the cell left the player
+    }
+    if (map->getCell(x + 1, y) && map->getCell(x + 1, y)->hasAnimatronic() == 2) {
+        return 6;  // Bonnie is in the cell right the player
+    }
+    if (map->getCell(x, y - 1) && map->getCell(x, y - 1)->hasAnimatronic() == 2) {
+        return 7;  // Bonnie is in the cell to the below of the player
+    }
+    if (map->getCell(x, y + 1) && map->getCell(x, y + 1)->hasAnimatronic() == 2) {
+        return 8;  // Bonnie is in the cell to the above of the player
+    }
+
+    return 0; // No robots nearby
 }
 
 void Player::nearHazard(ArcadeMap *map) const {

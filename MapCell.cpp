@@ -16,8 +16,14 @@ bool MapCell::hasCollapsingRoom() {
     return token == '#';
 }
 
-bool MapCell::hasAnimatronic() {
-    return hasFreddy || hasBonnie || token == 'F' || token == 'B';
+int MapCell::hasAnimatronic() {
+    if (hasFreddy) {
+        return 1;
+    } else if (hasBonnie) {
+        return 2;
+    } else {
+        return 0;
+    }
 }
 
 /**

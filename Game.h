@@ -24,6 +24,7 @@ private:
     Animatronics *bonnie;
     Tunnel *tunnel1;
     Tunnel *tunnel2;
+    int animatronicsDisabled;
 
 
     static void displayCurrentState();

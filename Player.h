@@ -21,16 +21,17 @@ public:
     bool move(char direction);
     bool getIsAlive();
     void displayInventory() const;        // method to display player's inventory
-    bool nearAnimatronic(ArcadeMap* map) const;
+    int nearAnimatronic(ArcadeMap* map) const;
     void nearHazard(ArcadeMap* map) const;
     void nearTunnel(ArcadeMap* map) const;
     int minusBattery();
     int minusMagnet();
 
+    int xLocation;
+    int yLocation;
 private:
     ArcadeMap *arcadeMap;
     MapCell *currentCell;
-    int xLocation, yLocation;
     int batteries = 2;    // number of batteries for flashlight
     int magnets = 2;       // number of masks for hiding from monsters
     bool isAlive = true;

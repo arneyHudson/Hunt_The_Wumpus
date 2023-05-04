@@ -21,6 +21,9 @@ void Game::play() {
         getUserAction();
         if(!player->getIsAlive()) {
             gameOver = true;
+        } else if(animatronicsDisabled == 2) {
+            cout << "Congrats, you have disabled all the animatronics and survived!" << endl;
+            gameOver = true;
         } else {
             player->displayInventory();
         }
@@ -86,8 +89,26 @@ void Game::handleUserAction(char action) {
         case 'm':
             player->minusMagnet();
             cout << "\nYou attempt to disable a robot with your magnet." << endl;
-            if(player->nearAnimatronic(map)) {
+            if(player->nearAnimatronic(map) != 0) {
                 cout << "\nYou disabled one of the robots. Great work!" << endl;
+                animatronicsDisabled += 1;
+                if(player->nearAnimatronic(map) == 1) {
+                    map->getCell(player->xLocation - 1, player->yLocation)->setFreddy(false);
+                } else if(player->nearAnimatronic(map) == 2) {
+                    map->getCell(player->xLocation + 1, player->yLocation)->setFreddy(false);
+                } else if(player->nearAnimatronic(map) == 3) {
+                    map->getCell(player->xLocation, player->yLocation - 1)->setFreddy(false);
+                } else if(player->nearAnimatronic(map) == 4) {
+                    map->getCell(player->xLocation, player->yLocation + 1)->setFreddy(false);
+                } else if(player->nearAnimatronic(map) == 5) {
+                    map->getCell(player->xLocation - 1, player->yLocation)->setBonnie(false);
+                } else if(player->nearAnimatronic(map) == 6) {
+                    map->getCell(player->xLocation + 1, player->yLocation)->setBonnie(false);
+                } else if(player->nearAnimatronic(map) == 7) {
+                    map->getCell(player->xLocation, player->yLocation - 1)->setBonnie(false);
+                } else if(player->nearAnimatronic(map) == 8) {
+                    map->getCell(player->xLocation, player->yLocation + 1)->setBonnie(false);
+                }
             } else {
                 cout << "\nYou missed your shot..." << endl;
             }
@@ -135,6 +156,7 @@ void Game::help() {
 
 Game::Game() {
     map = new ArcadeMap();
+    animatronicsDisabled = 0;
 
     // Create an array of all possible coordinates on the map
     vector<pair<int, int>> coordinates;
